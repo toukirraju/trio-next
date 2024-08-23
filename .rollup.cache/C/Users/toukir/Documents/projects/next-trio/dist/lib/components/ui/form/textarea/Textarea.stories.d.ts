@@ -1,0 +1,11 @@
+import { Meta } from '@storybook/react';
+import Textarea from './Textarea';
+declare const meta: Meta<typeof Textarea>;
+export default meta;
+export declare const Default: any;
+export declare const WithError: any;
+export declare const Resizable: any;
+export declare const Loading: any;
+export declare const Disabled: any;
+export declare const CustomStyling: any;
+export declare const LongContent: any;

@@ -1,0 +1,11 @@
+import React from 'react';
+import { Meta, Story } from '@storybook/react';
+import IconBox from './IconBox';
+declare const meta: Meta<typeof IconBox>;
+export default meta;
+export declare const Default: any;
+export declare const CustomIconAndColor: any;
+export declare const Shapes: Story<React.ComponentProps<typeof IconBox>>;
+export declare const Sizes: Story<React.ComponentProps<typeof IconBox>>;
+export declare const Masks: Story<React.ComponentProps<typeof IconBox>>;
+export declare const CustomStyling: any;

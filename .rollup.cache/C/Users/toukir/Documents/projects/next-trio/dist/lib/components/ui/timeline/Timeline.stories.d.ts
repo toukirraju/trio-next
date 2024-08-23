@@ -1,0 +1,12 @@
+import { Meta } from '@storybook/react';
+import { TimelineProps } from './Timeline';
+declare const _default: Meta;
+export default _default;
+export declare const Default: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const WithCustomContent: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const WithCustomTitle: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const WithCustomSubtitle: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const FullyCustomized: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const StringProps: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const EmptyTimeline: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;
+export declare const SingleItemTimeline: import("@storybook/csf").AnnotatedStoryFn<import("@storybook/react").ReactRenderer, TimelineProps>;

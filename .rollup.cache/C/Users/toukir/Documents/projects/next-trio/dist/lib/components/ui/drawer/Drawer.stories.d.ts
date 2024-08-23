@@ -1,0 +1,12 @@
+import { Meta, StoryObj } from '@storybook/react';
+import Drawer from './Drawer';
+declare const meta: Meta<typeof Drawer>;
+export default meta;
+type Story = StoryObj<typeof Drawer>;
+export declare const Default: Story;
+export declare const RightPlacement: Story;
+export declare const TopPlacement: Story;
+export declare const BottomPlacement: Story;
+export declare const CustomColors: Story;
+export declare const CustomWidth: Story;
+export declare const NoCloseOutside: Story;

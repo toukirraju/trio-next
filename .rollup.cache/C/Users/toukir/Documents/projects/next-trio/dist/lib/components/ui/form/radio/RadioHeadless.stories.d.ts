@@ -1,0 +1,10 @@
+import React from 'react';
+import { Meta, Story } from '@storybook/react';
+import RadioHeadless from './RadioHeadless';
+declare const meta: Meta<typeof RadioHeadless>;
+export default meta;
+export declare const Default: any;
+export declare const WithoutLabel: any;
+export declare const Checked: any;
+export declare const CustomContent: any;
+export declare const RadioGroup: Story<React.ComponentProps<typeof RadioHeadless>>;

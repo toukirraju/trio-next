@@ -1,0 +1,13 @@
+import { Meta } from '@storybook/react';
+declare const _default: Meta;
+export default _default;
+export declare const Default: any;
+export declare const WithLabel: any;
+export declare const WithIcon: any;
+export declare const WithAddon: any;
+export declare const WithError: any;
+export declare const Loading: any;
+export declare const LargeSize: any;
+export declare const ContrastColor: any;
+export declare const CurvedShape: any;
+export declare const FullyFeatured: any;
