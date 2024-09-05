@@ -188,9 +188,13 @@ export default function getColorPalette(baseColor?: string, option?: {
     colorType?: "hex" | "rgb";
     alpha?: number;
     shades?: ShadeOption[];
-}): Palette | undefined {
+}): Palette {
     if (!baseColor) {
-        return;
+        // thro console error
+        return {
+            name: "Invalid Color",
+            colors: {},
+        };
     }
 
     const fullColorCode = sixDigitsColorHex(baseColor);

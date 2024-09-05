@@ -1,1 +1,0 @@
-{"version":3,"file":"index.jsx","sourceRoot":"","sources":["index.tsx"],"names":[],"mappings":"AAAA,OAAO,OAAO,MAAM,WAAW,CAAC;AAEhC,eAAe,OAAO,CAAC","sourcesContent":["import TrioSVG from \"./TrioSVG\";\r\n\r\nexport default TrioSVG;\r\n"]}

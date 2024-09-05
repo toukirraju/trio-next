@@ -26,13 +26,13 @@ type UseTWVariableColor = (
     ];
 
 
-const useTWVariableColor: UseTWVariableColor = (variable, options) => {
+const useTWVariableColor: UseTWVariableColor = (variable, options = {}) => {
     const [variableColor, setVariableColor] = useState('#000000');
     const [generatedShades, setGeneratedShades] = useState<GeneratedShades>({});
 
     if (!variable) {
         console.error(`Variable not passed as props. Please pass props like useTWVariableColor('primary',{shades:['light','dark']})`);
-        return [generatedShades, variableColor, setVariableColor] as [
+        return [generatedShades, variable, setVariableColor] as [
             GeneratedShades,
             string,
             React.Dispatch<React.SetStateAction<string>>
@@ -40,6 +40,74 @@ const useTWVariableColor: UseTWVariableColor = (variable, options) => {
     }
 
     const memoizedOptions = useMemo(() => options, [options]);
+
+    // useLayoutEffect(() => {
+    //     const styleSheet = document.styleSheets[0];
+
+    //     const updateColorVariables = () => {
+    //         let rootRule = styleSheet.cssRules[0] as CSSStyleRule;
+    //         if (!rootRule || rootRule.selectorText !== ':root') {
+    //             styleSheet.insertRule(':root {}', 0);
+    //             rootRule = styleSheet.cssRules[0] as CSSStyleRule;
+    //         }
+
+    //         // Set base variable
+    //         rootRule.style.setProperty(`--${variable}`, variableColor);
+
+    //         const newGeneratedShades: GeneratedShades = {};
+
+    //         // Set shades based on algorithm
+    //         if (memoizedOptions?.algorithm === "base-500") {
+    //             // Use getColorPalette function
+    //             const palette = getColorPalette(variableColor, {
+    //                 colorType: memoizedOptions.colorType,
+    //                 alpha: memoizedOptions.alpha,
+    //                 shades: memoizedOptions.shades
+    //             });
+
+    //             if (palette) {
+    //                 Object.entries(palette.colors).forEach(([shade, color]) => {
+    //                     rootRule.style.setProperty(`--${variable}-${shade}`, color);
+    //                     newGeneratedShades[shade as ShadeOption] = color;
+    //                 });
+    //             }
+    //         } else {
+    //             // Use the existing base-primary algorithm
+    //             const [h, s, l] = variableColor.startsWith('#')
+    //                 ? hexToHSL(variableColor)
+    //                 : hexToHSL(`rgb(${variableColor})`);
+
+    //             // Generate shades
+    //             memoizedOptions?.shades?.forEach((shade) => {
+    //                 let shadeValue: string;
+    //                 if (shade === 'light') {
+    //                     shadeValue = hslToHex(h, s, adjustLightness(l, 'light'));
+    //                 } else if (shade === 'dark') {
+    //                     shadeValue = hslToHex(h, s, adjustLightness(l, 'dark'));
+    //                 } else {
+    //                     shadeValue = hslToHex(h, s, adjustLightness(l, shade));
+    //                 }
+
+    //                 // Convert to RGB if colorType is rgb
+    //                 if (memoizedOptions.colorType === "rgb") {
+    //                     shadeValue = hexToRgba(shadeValue, memoizedOptions?.alpha);
+    //                 }
+
+    //                 rootRule.style.setProperty(`--${variable}-${shade}`, shadeValue);
+    //                 newGeneratedShades[shade] = shadeValue;
+    //             });
+    //         }
+    //         // Update state with new generated shades if they have changed
+    //         setGeneratedShades(prevShades => {
+    //             if (JSON.stringify(prevShades) !== JSON.stringify(newGeneratedShades)) {
+    //                 return newGeneratedShades;
+    //             }
+    //             return prevShades;
+    //         });
+    //     };
+
+    //     updateColorVariables();
+    // }, [variableColor, variable, memoizedOptions]);
 
     useLayoutEffect(() => {
         const styleSheet = document.styleSheets[0];
@@ -56,47 +124,15 @@ const useTWVariableColor: UseTWVariableColor = (variable, options) => {
 
             const newGeneratedShades: GeneratedShades = {};
 
-            // Set shades based on algorithm
-            if (memoizedOptions?.algorithm === "base-500") {
-                // Use getColorPalette function
-                const palette = getColorPalette(variableColor, {
-                    colorType: memoizedOptions.colorType,
-                    alpha: memoizedOptions.alpha,
-                    shades: memoizedOptions.shades
-                });
+            // Generate shades based on the selected algorithm
+            const shades = generateShades(variableColor, memoizedOptions);
 
-                if (palette) {
-                    Object.entries(palette.colors).forEach(([shade, color]) => {
-                        rootRule.style.setProperty(`--${variable}-${shade}`, color);
-                        newGeneratedShades[shade as ShadeOption] = color;
-                    });
-                }
-            } else {
-                // Use the existing base-primary algorithm
-                const [h, s, l] = variableColor.startsWith('#')
-                    ? hexToHSL(variableColor)
-                    : hexToHSL(`rgb(${variableColor})`);
+            // Set CSS variables for each shade
+            Object.entries(shades).forEach(([shade, color]) => {
+                rootRule.style.setProperty(`--${variable}-${shade}`, color);
+                newGeneratedShades[shade as ShadeOption] = color;
+            });
 
-                // Generate shades
-                memoizedOptions?.shades?.forEach((shade) => {
-                    let shadeValue: string;
-                    if (shade === 'light') {
-                        shadeValue = hslToHex(h, s, adjustLightness(l, 'light'));
-                    } else if (shade === 'dark') {
-                        shadeValue = hslToHex(h, s, adjustLightness(l, 'dark'));
-                    } else {
-                        shadeValue = hslToHex(h, s, adjustLightness(l, shade));
-                    }
-
-                    // Convert to RGB if colorType is rgb
-                    if (memoizedOptions.colorType === "rgb") {
-                        shadeValue = hexToRgba(shadeValue, memoizedOptions?.alpha);
-                    }
-
-                    rootRule.style.setProperty(`--${variable}-${shade}`, shadeValue);
-                    newGeneratedShades[shade] = shadeValue;
-                });
-            }
             // Update state with new generated shades if they have changed
             setGeneratedShades(prevShades => {
                 if (JSON.stringify(prevShades) !== JSON.stringify(newGeneratedShades)) {
@@ -110,11 +146,14 @@ const useTWVariableColor: UseTWVariableColor = (variable, options) => {
     }, [variableColor, variable, memoizedOptions]);
 
 
-    return [generatedShades, variableColor, setVariableColor] as [
+    return [generatedShades, variable, setVariableColor] as [
         GeneratedShades,
         string,
         React.Dispatch<React.SetStateAction<string>>
     ];
+
+
+
 };
 
 
@@ -138,6 +177,64 @@ const adjustLightness = (l: number, shade: string) => {
     return Math.round((shadeMap[shade] || 0.5) * 100);
 };
 
+
+// Helper function to generate shades based on the selected algorithm
+const generateShades = (baseColor: string, options: TwConfig): GeneratedShades => {
+    if (options?.algorithm === "base-500") {
+        const palette = getColorPalette(baseColor, {
+            colorType: options.colorType,
+            alpha: options.alpha,
+            shades: options.shades
+        })
+        return palette?.colors || {};
+    } else {
+        const [h, s, l] = baseColor.startsWith('#')
+            ? hexToHSL(baseColor)
+            : hexToHSL(`rgb(${baseColor})`);
+
+        // return options?.shades?.reduce((acc, shade) => {
+        //     let shadeValue: string;
+        //     if (shade === 'light') {
+        //         shadeValue = hslToHex(h, s, adjustLightness(l, 'light'));
+        //     } else if (shade === 'dark') {
+        //         shadeValue = hslToHex(h, s, adjustLightness(l, 'dark'));
+        //     } else {
+        //         shadeValue = hslToHex(h, s, adjustLightness(l, shade));
+        //     }
+
+        //     if (options.colorType === "rgb") {
+        //         shadeValue = hexToRgba(shadeValue, options?.alpha);
+        //     }
+
+        //     acc[shade] = shadeValue;
+        //     return acc;
+        // }, {} as GeneratedShades);
+
+        const shades = options?.shades?.reduce((acc, shade) => {
+            let shadeValue: string;
+            if (shade === 'light') {
+                shadeValue = hslToHex(h, s, adjustLightness(l, 'light'));
+            } else if (shade === 'dark') {
+                shadeValue = hslToHex(h, s, adjustLightness(l, 'dark'));
+            } else {
+                shadeValue = hslToHex(h, s, adjustLightness(l, shade));
+            }
+
+            if (options.colorType === "rgb") {
+                shadeValue = hexToRgba(shadeValue, options?.alpha);
+            }
+
+            acc[shade] = shadeValue;
+            return acc;
+        }, {} as GeneratedShades);
+
+        return shades || {};
+    }
+};
+
+
 export default useTWVariableColor;
+
+
 
 

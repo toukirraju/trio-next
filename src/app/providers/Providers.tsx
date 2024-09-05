@@ -5,12 +5,21 @@ import React from 'react'
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
-        <ThemeProvider themeLoader={<Loader />} config={{
-            shades: ["25", '50', '100', '200', '300', '400', '500', '600', '700', '800', '900', "950"],
-            algorithm: 'base-primary',
-            colorType: 'hex',
-            // alpha: 1,
-        }}>
+        <ThemeProvider
+            themeLoader={<Loader />}
+            config={{
+                shades: ["25", '50', '100', '200', '300', '400', '500', '600', '700', '800', '900', "950", 'light', 'dark'],
+                algorithm: 'base-500',
+                colorType: 'hex',
+                // alpha: 1,
+                variables: {
+                    primary: '#0fffff',
+                    secondary: '#00FF00',
+                    // danger: '#d91a47',
+                }
+            }}
+
+        >
             <ThemeController />
             <PatternBG
                 backgroundImage="/pattern/square.svg"

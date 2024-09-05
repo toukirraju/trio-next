@@ -8,7 +8,7 @@ import {
 import { MdOutlineFormatColorFill } from "react-icons/md";
 
 type ColorPaletteProps = {
-  variable?: "primary" | "secondary";
+  variable?: string;
   size?: "sm" | "md" | "lg";
   value?: any;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;

@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["index.ts"],"names":[],"mappings":"AAAA,cAAc,OAAO,CAAC","sourcesContent":["export * from \"./lib\";\r\n\r\n\r\n"]}
