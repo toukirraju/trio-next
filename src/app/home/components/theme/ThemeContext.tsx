@@ -10,7 +10,7 @@ type ThemeContextType = {
   changeTheme: (theme: Partial<ThemeType>) => void;
 };
 
-type ThemeType = {
+export type ThemeType = {
   name: string;
   mode: string;
   shades: Array<{

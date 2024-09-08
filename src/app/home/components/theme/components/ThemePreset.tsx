@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { useTheme } from './theme/ThemeContext';
+import { useTheme } from '../ThemeContext';
 import getColorPalette from '@/utils/colors';
 
 
 
-const ColorPreset: React.FC = () => {
+const ThemePreset: React.FC = () => {
     const [presetVariable, setPresetVariable] = useState<string>('');
     const { theme, setTheme } = useTheme();
 
@@ -100,4 +100,4 @@ const ColorPreset: React.FC = () => {
     );
 };
 
-export default ColorPreset;
+export default ThemePreset;
