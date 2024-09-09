@@ -1,24 +1,23 @@
 
 import { ThemePalette, ThemePreset } from "./theme/components";
-import { useTheme } from "./theme/ThemeContext";
+import ThemeMode from "./theme/components/ThemeMode";
 
 const ThemeWrapper = () => {
-    const { theme, config, setTheme, toggleDarkMode } = useTheme();
-
 
     return (
         <main className="flex min-h-screen flex-col items-center  bg-primary-900 dark:bg-primary-dark dark:text-white">
 
-            <ThemePreset />
+
+            <div className="flex flex-col justify-center items-start gap-3 w-full p-2 md:max-w-[70%]">
+                <ThemeMode />
+                <ThemePreset />
+                <ThemePalette />
+            </div>
 
 
             {/* color palette */}
-            <ThemePalette />
 
-            {/* toggle mode dark, light, system */}
-            <button onClick={() => toggleDarkMode('dark')}>Dark</button>
-            <button onClick={() => toggleDarkMode('light')}>Light</button>
-            <button onClick={() => toggleDarkMode('system')}>System</button>
+
         </main>
     );
 };

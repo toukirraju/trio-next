@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
-import { useTheme } from '../ThemeContext';
+import { ThemeType, useTheme } from '../ThemeContext';
 import getColorPalette from '@/utils/colors';
+import { cn } from '@/utils/cn';
 
 
 
@@ -61,22 +62,51 @@ const ThemePreset: React.FC = () => {
 
     const presetColors = [
         { name: "Red", color: "#FF0000" },
-        { name: "Green", color: "#00FF00" },
+        { name: "Green", color: "#008600" },
         { name: "Blue", color: "#0000FF" },
         { name: "Pink", color: "#FF00FF" },
         { name: "Yellow", color: "#FFFF00" },
         { name: "Cyan", color: "#00FFFF" },
         { name: "Orange", color: "#FFA500" },
         { name: "Purple", color: "#800080" },
+        { name: "Brown", color: "#A52A2A" },
+        { name: "Teal", color: "#008080" },
+        { name: "Indigo", color: "#4B0082" },
+        { name: "Lime", color: "#00FF00" },
+        { name: "Amber", color: "#FFBF00" },
+        { name: "Deep Purple", color: "#673AB7" },
+        { name: "Light Blue", color: "#03A9F4" },
+        { name: "Light Green", color: "#8BC34A" },
+        { name: "Deep Orange", color: "#FF5722" },
+        { name: "Grey", color: "#9E9E9E" },
+        { name: "Blue Grey", color: "#607D8B" },
+        { name: "Black", color: "#000000" },
+        { name: "White", color: "#FFFFFF" }
     ];
 
+
+    // preset is active or not
+
+    const isActivePreset = (color: string, theme: ThemeType) => {
+        //check preset variable is matching with theme shades name
+        //check preset color is matching with theme shades color
+        return theme?.shades?.some(shade => shade.name === presetVariable && shade.color === color);
+
+    }
+
+
+
+
     return (
-        <div>
-            <p className="text-gray-500 text-sm mb-2">Preset</p>
+        <div className='flex flex-col gap-2 '>
+            <div>
+                <h1 className='text-sm'>Themes</h1>
+                <p className='text-xs'>Choose any of the preset variable and pick color</p>
+            </div>
             <select
                 value={presetVariable}
                 onChange={(e) => setPresetVariable(e.target.value)}
-                className="bg-gray-200 py-1 px-2 rounded-md border shadow-sm hover:bg-gray-300 text-sm text-gray-600 mb-2"
+                className="bg-slate-200 transition-all duration-300 dark:bg-slate-700 max-w-[250px] py-1 px-2 rounded-md border shadow-sm hover:bg-gray-300 outline-none ring-0 hover:dark:bg-slate-800 dark:border-slate-600 text-sm text-gray-600 dark:text-slate-300 capitalize"
             >
                 <option value="">Select preset</option>
                 {theme?.shades?.map(shade => (
@@ -89,10 +119,12 @@ const ThemePreset: React.FC = () => {
                     <button
                         key={name}
                         onClick={() => handleSetColor(presetVariable, color)}
-                        className="bg-gray-200 py-1 px-2 flex items-center gap-2 rounded-md border shadow-sm hover:bg-gray-300 text-sm text-gray-600"
+                        className={cn("bg-gray-200 transition-all duration-300 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600 hover:dark:bg-slate-800 md:pr-4 md:pl-1 md:py-0.5 flex items-center gap-2 rounded-full border-[1px] border-slate-300 shadow-sm hover:bg-gray-300 text-sm text-gray-600",
+                            isActivePreset(color, theme) ? "ring ring-primary-500 bg-primary-200 shadow-lg shadow-primary-500" : ""
+                        )}
                     >
-                        <div className="h-[15px] w-[15px] rounded-full" style={{ backgroundColor: color }} />
-                        {name}
+                        <div className="h-[25px] w-[25px] rounded-full" style={{ backgroundColor: color }} />
+                        <span className='hidden md:block'>{name}</span>
                     </button>
                 ))}
             </div>

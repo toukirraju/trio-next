@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@layer utilities {
+    @keyframes pulse-left-to-right {
+        0% {
+            background-position: 200% 0;
+        }
+
+        100% {
+            background-position: -200% 0;
+        }
+    }
+
+    .animate-pulse-left-to-right {
+        background-image: linear-gradient(90deg, rgba(200, 200, 200, 0.1) 25%, rgba(200, 200, 200, 0.2) 50%, rgba(200, 200, 200, 0.1) 75%);
+        background-size: 200% 100%;
+        animation: pulse-left-to-right 5s ease-in-out infinite;
+    }
+}

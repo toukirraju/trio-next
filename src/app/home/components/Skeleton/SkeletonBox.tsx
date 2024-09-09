@@ -5,7 +5,7 @@ import React from 'react';
 type RoundedVariant = 'sm' | 'md' | 'lg' | 'full' | 'none';
 type ColorVariant = 'primary' | 'secondary' | 'success' | 'error' | 'default' | 'none';
 type ShadowVariant = 'sm' | 'md' | 'lg' | 'none';
-type AnimationType = 'pulse' | 'leftToRight' | 'centerToSide' | 'none';
+type AnimationType = 'pulse' | 'leftToRight' | 'none';
 type ImageSize = 'xxs' | 'xs' | 'sm' | 'md' | 'lg';
 
 // Props type for the SkeletonBox component
@@ -26,7 +26,7 @@ interface BoxProps {
 const SkeletonBox: React.FC<BoxProps> = ({
     className = '',
     height = 'h-2.5', // Default height
-    width = 'w-48', // Default width
+    width = 'w-full', // Default width
     rounded = 'full', // Default rounded
     color = 'default', // Default color
     shadow = 'md', // Default shadow
@@ -78,7 +78,6 @@ const SkeletonBox: React.FC<BoxProps> = ({
     const animationClasses: Record<AnimationType, string> = {
         pulse: 'animate-pulse duration-300',
         leftToRight: 'animate-pulse-left-to-right',
-        centerToSide: 'animate-pulse-center-to-side',
         none: '',
     };
 

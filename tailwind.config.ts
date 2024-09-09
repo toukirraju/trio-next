@@ -44,9 +44,21 @@ const config: Config = {
           dark: "var(--secondary-dark)",
         },
       },
+
+
+      keyframes: {
+        'pulse-left-to-right': {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
+        },
+      },
+      animation: {
+        'pulse-left-to-right': 'pulse-left-to-right 3s ease-in-out infinite',
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "conic-gradient": "conic-gradient(var(--tw-gradient-stops))",
+        'pulse-gradient': 'linear-gradient(90deg, rgba(200, 200, 200, 0.1) 25%, rgba(200, 200, 200, 0.2) 50%, rgba(200, 200, 200, 0.1) 75%)',
       },
     },
   },
