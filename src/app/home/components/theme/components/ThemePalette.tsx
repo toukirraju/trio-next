@@ -91,21 +91,24 @@ const ThemePalette = () => {
 
 
     return (
-        <div>
-            <button className='bg-cyan-700 border rounded-md py-2 px-3 disabled:bg-slate-400 disabled:text-gray-500 disabled:cursor-not-allowed transition-all duration-300' disabled={!isPaletteChanged} onClick={handleSaveTheme}>Save Theme</button>
-
-
-
-            <h1>Palettes</h1>
-
-            <div className='flex flex-col gap-2'>
+        <div className='space-y-2'>
+            <div className='flex justify-between items-center'>
+                <div>
+                    <h1 className='text-sm'>Palettes</h1>
+                    <p className='text-xs'>Make a color palettes from single color</p>
+                </div>
+                <button className='bg-cyan-700 hover:bg-cyan-800 text-gray-100 border border-slate-400 text-sm rounded-md py-1 px-1 md:px-3 min-w-24 dark:border-slate-600 disabled:bg-slate-400 disabled:text-gray-500 disabled:cursor-not-allowed transition-all duration-300' disabled={!isPaletteChanged} onClick={handleSaveTheme}>Save Theme</button>
+            </div>
+            <div className='grid grid-cols-12 gap-2'>
                 {theme?.shades?.map((shade, index) => (
-                    <PaletteGenerator
-                        key={index}
-                        color={shade.color}
-                        shadeName={shade.name}
-                        getPalette={handleChangePalette}
-                    />
+                    <div className='col-span-12 md:col-span-6'>
+                        <PaletteGenerator
+                            key={index}
+                            color={shade.color}
+                            shadeName={shade.name}
+                            getPalette={handleChangePalette}
+                        />
+                    </div>
                 ))}
             </div>
         </div>

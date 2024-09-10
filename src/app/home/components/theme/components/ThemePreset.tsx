@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { ThemeType, useTheme } from '../ThemeContext';
 import getColorPalette from '@/utils/colors';
-import { cn } from '@/utils/cn';
+import { cn } from '../utils';
 
 
 
@@ -114,12 +114,12 @@ const ThemePreset: React.FC = () => {
                 ))}
             </select>
 
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap max-w-[450px] md:max-w-[900px]">
                 {presetColors.map(({ name, color }) => (
                     <button
                         key={name}
                         onClick={() => handleSetColor(presetVariable, color)}
-                        className={cn("bg-gray-200 transition-all duration-300 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600 hover:dark:bg-slate-800 md:pr-4 md:pl-1 md:py-0.5 flex items-center gap-2 rounded-full border-[1px] border-slate-300 shadow-sm hover:bg-gray-300 text-sm text-gray-600",
+                        className={cn("bg-gray-100 transition-all duration-300 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600 hover:dark:bg-slate-800 md:pr-4 md:pl-1 md:py-0.5 flex items-center gap-2 rounded-full border-[1px] border-slate-300 shadow-sm hover:bg-gray-300 text-sm text-gray-600",
                             isActivePreset(color, theme) ? "ring ring-primary-500 bg-primary-200 shadow-lg shadow-primary-500" : ""
                         )}
                     >

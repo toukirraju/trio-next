@@ -1,9 +1,9 @@
 
-import useTWVariableColor, { TwConfig } from "@/lib/hooks/useTWVariableColor";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { PaletteConfig } from "./types";
 
 type ThemeContextType = {
-  config: TwConfig;
+  config: PaletteConfig;
   theme: ThemeType;
   setTheme: React.Dispatch<React.SetStateAction<ThemeType>>;
   toggleDarkMode: (mode: string) => void;
@@ -26,7 +26,7 @@ type ThemeProviderProps = {
   children: React.ReactNode;
   defaultTheme?: ThemeType;
   themeLoader?: React.ReactNode;
-  config: TwConfig;
+  config: PaletteConfig;
 };
 
 const defaultThemePreset = {

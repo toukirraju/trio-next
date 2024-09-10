@@ -1,7 +1,7 @@
 import React from 'react'
 import SkeletonBox from '../../Skeleton/SkeletonBox'
 import { useTheme } from '../ThemeContext';
-import { cn } from '@/utils/cn';
+import { cn } from '../utils';
 
 const ThemeMode = () => {
     const { theme, toggleDarkMode } = useTheme();

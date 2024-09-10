@@ -222,7 +222,7 @@ export default function getColorPalette(baseColor?: string, option?: {
         '900': 0.45,
         '950': 0.29,
         'light': 0.97,  // Same as '50'
-        'dark': 0.29,   // Same as '900'
+        'dark': 0.10,  // Same as '900'
     };
 
     const convertColor = (color: string) => {
