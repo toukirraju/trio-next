@@ -1,6 +1,30 @@
 
+"use client";
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { PaletteConfig } from "./types";
+import { isHex, isRgb } from "./utils";
+
+
+type ShadeType = {
+  name: string;
+  color: string;
+  shade: Record<string, string>;
+};
+
+type BaseThemeType = {
+  mode: string;
+  shades: ShadeType[];
+};
+
+export type DefaultThemeType = BaseThemeType & {
+  name: "default";
+};
+
+export type CustomThemeType = BaseThemeType & {
+  name: Exclude<string, "default">;
+};
+
+export type ThemeType = DefaultThemeType | CustomThemeType;
 
 type ThemeContextType = {
   config: PaletteConfig;
@@ -10,26 +34,17 @@ type ThemeContextType = {
   changeTheme: (theme: Partial<ThemeType>) => void;
 };
 
-export type ThemeType = {
-  name: string;
-  mode: string;
-  shades: Array<{
-    name: string;
-    color: string;
-    shade: Record<string, string>;
-  }>
-};
-
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 type ThemeProviderProps = {
   children: React.ReactNode;
-  defaultTheme?: ThemeType;
+  defaultTheme?: CustomThemeType;
   themeLoader?: React.ReactNode;
   config: PaletteConfig;
 };
 
-const defaultThemePreset = {
+
+const defaultThemeHex: DefaultThemeType = {
   name: "default",
   mode: "light",
   shades: [
@@ -71,33 +86,70 @@ const defaultThemePreset = {
         "950": "#011b4a",
         "light": "#f7fdff",
         "dark": "#010c4a"
-      }
-    }
+      },
+    },
   ]
 }
+
+
+const defaultThemeRgb: DefaultThemeType = {
+  name: "default",
+  mode: "light",
+  shades: [
+    {
+      name: "primary",
+      color: "15 255 255",
+      shade: {
+        "25": "247 255 255",
+        "50": "242 255 255",
+        "100": "232 255 255",
+        "200": "196 255 255",
+        "300": "158 255 255",
+        "400": "87 255 255",
+        "500": "15 255 255",
+        "600": "11 219 230",
+        "700": "8 167 191",
+        "800": "6 124 153",
+        "900": "3 83 115",
+        "950": "1 49 74",
+        "light": "247 255 255",
+        "dark": "1 49 74"
+      }
+    },
+    {
+      name: "secondary",
+      color: "15 111 255",
+      shade: {
+        "25": "247 253 255",
+        "50": "242 251 255",
+        "100": "232 247 255",
+        "200": "196 233 255",
+        "300": "158 215 255",
+        "400": "87 168 255",
+        "500": "15 111 255",
+        "600": "11 95 230",
+        "700": "8 72 191",
+        "800": "6 53 153",
+        "900": "3 35 115",
+        "950": "1 20 74",
+        "light": "247 253 255",
+        "dark": "1 20 74"
+      }
+    },
+  ]
+};
 
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   children,
   themeLoader,
   config,
+  defaultTheme
 }) => {
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState<ThemeType>(() => ({
 
   } as ThemeType));
-
-
-  // dynamic color hooks
-  // const colorHooks = theme.shades.map(({ name, color }) =>
-  //   useTWVariableColor(name, {
-  //     shades: config.shades,
-  //     algorithm: config.algorithm,
-  //     colorType: config.colorType,
-  //     alpha: config.alpha,
-  //   })
-  // );
-
 
 
   // initialized theme 
@@ -106,22 +158,69 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
       // get local storage theme 
       const localTheme = localStorage.getItem("trio-theme");
 
-      if (localTheme) {
-        const themeObj = JSON.parse(localTheme) as ThemeType;
-        setTheme(themeObj);
+      if (defaultTheme) {
+        if (defaultTheme.name === "default") {
+          throw new Error("Please change default theme name from 'default' to something else because 'default' is a reserved keyword. e.g. name: 'my-default-theme'");
+        }
+        if (localTheme) {
+          const themeObj = JSON.parse(localTheme) as ThemeType;
 
-        // set color hooks
-        // themeObj.shades.forEach((shade, index) => {
-        //   colorHooks[index][2](shade.color);
-        // });
+          if (defaultTheme.name !== "default" && themeObj?.name !== defaultTheme.name) {
+            // if default theme name is not 'default' and local storage theme name is not same as default theme name then remove local storage and set default theme
+            localStorage.setItem("trio-theme", JSON.stringify(defaultTheme));
+            setTheme(defaultTheme);
+          } else {
+            //check if color type is rgb or hex if config color type is rgb but local storage is hex then remove local storage and set default theme 
+            //also if config color type is same as local storage then set local storage theme
+            if (config.colorType === "rgb" && themeObj.shades[0].color.includes("#")) {
+              setTheme(defaultThemeRgb);
+              localStorage.setItem("trio-theme", JSON.stringify(defaultThemeRgb));
+            } else if (config.colorType === "hex" && !themeObj.shades[0].color.includes("#")) {
+              setTheme(defaultThemeHex);
+              localStorage.setItem("trio-theme", JSON.stringify(defaultThemeHex));
+            } else {
+              setTheme(themeObj);
+              localStorage.setItem("trio-theme", JSON.stringify(themeObj));
 
-        // apply dark mode
-        applyDarkMode(themeObj.mode);
+              // apply dark mode
+              applyDarkMode(themeObj.mode);
+            }
+          }
 
+
+        } else {
+          console.log("local theme not found");
+          // const initialTheme = defaultTheme || (config.colorType === "rgb" ? defaultThemeRgb : defaultThemeHex);
+          // setTheme(initialTheme);
+          // localStorage.setItem("trio-theme", JSON.stringify(initialTheme));
+        }
       } else {
-        setTheme(defaultThemePreset);
-        localStorage.setItem("trio-theme", JSON.stringify(defaultThemePreset));
+        // if default theme is not provided then set local storage theme 
+        if (localTheme) {
+          const themeObj = JSON.parse(localTheme) as ThemeType;
+
+          //check if color type is rgb or hex if config color type is rgb but local storage is hex then remove local storage and set default theme 
+          //also if config color type is same as local storage then set local storage theme
+          if (config.colorType === "rgb" && themeObj.shades[0].color.includes("#")) {
+            setTheme(defaultThemeRgb);
+            localStorage.setItem("trio-theme", JSON.stringify(defaultThemeRgb));
+          } else if (config.colorType === "hex" && !themeObj.shades[0].color.includes("#")) {
+            setTheme(defaultThemeHex);
+            localStorage.setItem("trio-theme", JSON.stringify(defaultThemeHex));
+          } else {
+            setTheme(themeObj);
+
+            // apply dark mode
+            applyDarkMode(themeObj.mode);
+          }
+
+        } else {
+          const initialTheme = defaultTheme || (config.colorType === "rgb" ? defaultThemeRgb : defaultThemeHex);
+          setTheme(initialTheme);
+          localStorage.setItem("trio-theme", JSON.stringify(initialTheme));
+        }
       }
+
       setLoading(false);
     };
 
@@ -129,26 +228,24 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   }, [
     theme.name,
     theme.mode,
+    config.colorType,
+    defaultTheme
   ]);
 
 
   // apply dark mode
   const applyDarkMode = (mode: string) => {
     if (mode === "dark") {
-      document.documentElement.classList.add("dark");
       // set data-mode attribute for dark mode
       document.documentElement.setAttribute("data-mode", "dark");
     } else if (mode === "light") {
-      document.documentElement.classList.remove("dark");
       // set data-mode attribute for light mode
       document.documentElement.setAttribute("data-mode", "light");
     } else if (mode === "system") {
       if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        document.documentElement.classList.add("dark");
         // set data-mode attribute for dark mode
         document.documentElement.setAttribute("data-mode", "dark");
       } else {
-        document.documentElement.classList.remove("dark");
         // set data-mode attribute for light mode
         document.documentElement.setAttribute("data-mode", "light");
       }
@@ -177,8 +274,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
 
 
   }
-
-
 
 
   const contextValue = useMemo(() => ({

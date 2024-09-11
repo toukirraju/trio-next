@@ -4,7 +4,7 @@ export type ColorType = "hex" | "rgb";
 
 export type PaletteConfig = {
     shades?: ShadeOption[],
-    algorithm?: AlgorithmOption,
+    // algorithm?: AlgorithmOption,
     colorType?: ColorType,
     alpha?: number
 }

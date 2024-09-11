@@ -248,3 +248,38 @@ export default function getColorPalette(baseColor?: string, option?: {
 
     return response as Palette;
 }
+
+
+export const hexToRgb = (hex: string) => {
+    let r = 0, g = 0, b = 0;
+    // 3 digits
+    if (hex.length === 4) {
+        r = parseInt(hex[1] + hex[1], 16);
+        g = parseInt(hex[2] + hex[2], 16);
+        b = parseInt(hex[3] + hex[3], 16);
+    }
+    // 6 digits
+    else if (hex.length === 7) {
+        r = parseInt(hex[1] + hex[2], 16);
+        g = parseInt(hex[3] + hex[4], 16);
+        b = parseInt(hex[5] + hex[6], 16);
+    }
+    return `${r} ${g} ${b}`;
+};
+
+export const rgbToHex = (rgb: string) => {
+    const [r, g, b] = rgb.match(/\d+/g)?.map(Number) || [0, 0, 0];
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+};
+
+
+export function isHex(color: string): boolean {
+    // Check if it starts with '#' and is 4, 7, or 9 characters long (e.g., #fff, #ffffff, #ffffffff)
+    return /^#([0-9A-Fa-f]{3}){1,2}$|^#([0-9A-Fa-f]{4}){1,2}$/.test(color);
+}
+
+export function isRgb(color: string): boolean {
+    // Check if it's a space-separated string of 3 numbers (e.g., "15 155 155")
+    return /^(\d{1,3})\s(\d{1,3})\s(\d{1,3})$/.test(color);
+}
+

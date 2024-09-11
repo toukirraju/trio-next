@@ -1,13 +1,14 @@
+"use client";
 import React, { useState, useCallback } from 'react';
 import { ThemeType, useTheme } from '../ThemeContext';
-import getColorPalette from '@/utils/colors';
-import { cn } from '../utils';
+
+import { cn, getColorPalette, hexToRgb } from '../utils';
 
 
 
 const ThemePreset: React.FC = () => {
     const [presetVariable, setPresetVariable] = useState<string>('');
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, config } = useTheme();
 
 
     const handleSetColor = useCallback((preset: string, color: string) => {
@@ -16,15 +17,17 @@ const ThemePreset: React.FC = () => {
             return;
         }
 
+
         const generatedPalette = getColorPalette(color, {
-            colorType: "hex",
-            shades: ["25", '50', '100', '200', '300', '400', '500', '600', '700', '800', '900', "950", 'light', 'dark']
+            // colorType: "hex",
+            // shades: ["25", '50', '100', '200', '300', '400', '500', '600', '700', '800', '900', "950", 'light', 'dark']
+            ...config
         });
 
         setTheme(prevTheme => {
             const updatedShades = prevTheme.shades.map(shade =>
                 shade.name === preset
-                    ? { ...shade, color, shade: generatedPalette.colors }
+                    ? { ...shade, color: config?.colorType === "rgb" ? hexToRgb(color) : color, shade: generatedPalette.colors }
                     : shade
             );
 
@@ -88,9 +91,10 @@ const ThemePreset: React.FC = () => {
     // preset is active or not
 
     const isActivePreset = (color: string, theme: ThemeType) => {
+        const dyColor = config?.colorType === "rgb" ? hexToRgb(color) : color;
         //check preset variable is matching with theme shades name
         //check preset color is matching with theme shades color
-        return theme?.shades?.some(shade => shade.name === presetVariable && shade.color === color);
+        return theme?.shades?.some(shade => shade.name === presetVariable && shade.color === dyColor);
 
     }
 
@@ -119,7 +123,7 @@ const ThemePreset: React.FC = () => {
                     <button
                         key={name}
                         onClick={() => handleSetColor(presetVariable, color)}
-                        className={cn("bg-gray-100 transition-all duration-300 dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600 hover:dark:bg-slate-800 md:pr-4 md:pl-1 md:py-0.5 flex items-center gap-2 rounded-full border-[1px] border-slate-300 shadow-sm hover:bg-gray-300 text-sm text-gray-600",
+                        className={cn("bg-gray-100 dark:bg-slate-700 transition-all duration-300  dark:text-slate-300 dark:border-slate-600 hover:dark:bg-slate-800 md:pr-4 md:pl-1 md:py-0.5 flex items-center gap-2 rounded-full border-[1px] border-slate-300 shadow-sm hover:bg-gray-300 text-sm text-gray-600",
                             isActivePreset(color, theme) ? "ring ring-primary-500 bg-primary-200 shadow-lg shadow-primary-500" : ""
                         )}
                     >
